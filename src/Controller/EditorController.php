@@ -59,4 +59,17 @@ class EditorController extends AbstractController
 
         return new JsonResponse(null, Response::HTTP_NOT_FOUND, [], true);
     }
+
+    #[Route('/api/editor/{id}', name: 'app_editor_delete', methods: ['DELETE'])]
+    public function deleteEditor(int $id, EditorRepository $editorRepository, EntityManagerInterface $em):JsonResponse
+    {
+        $editor = $editorRepository->find($id);
+        if ($editor) {
+            $em->remove($editor);
+            $em->flush();
+
+            return new JsonResponse(null,Response::HTTP_NO_CONTENT);
+        }
+        return new JsonResponse(["message"=>"Editor not found"], Response::HTTP_NOT_FOUND);
+    }
 }
