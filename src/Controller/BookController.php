@@ -7,6 +7,7 @@ use App\Entity\Author;
 use App\Entity\Editor;
 use App\Repository\AuthorRepository;
 use App\Repository\BookRepository;
+use App\Repository\EditorRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,19 +52,21 @@ class BookController extends AbstractController
     }
 
     #[Route(path: '/api/book/', name: 'app_book_add', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, AuthorRepository $authorRepository): JsonResponse
+    public function create(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer, AuthorRepository $authorRepository, EditorRepository $editorRepository): JsonResponse
     {
         $book = $serializer->deserialize($request->getContent(), Book::class, 'json');
         $content = $request->toArray();
         $authorId = $content['idAuthor'] ?? -1; // si c pas present on donne -1
         $author = $authorRepository->find($authorId);
-        if ($author) {
+        $editorId = $content['idEditor'] ?? -1;
+        $editor = $editorRepository->find($editorId);
+        if ($author && $editor) {
             $book->setAuthor($author);
+            $book->setEditor($editor);
             $entityManager->persist($book);
             $entityManager->flush();
             return new JsonResponse($serializer->serialize($book, 'json', ['groups' => 'getBooks']), Response::HTTP_CREATED, [], true);
         }
-
         return new JsonResponse(['message' => "Author not found"], Response::HTTP_BAD_REQUEST);
     }
 

@@ -18,7 +18,7 @@ class EditorController extends AbstractController
     public function getAll(EditorRepository $editorRepository, SerializerInterface $serializer): JsonResponse
     {
         $editorList = $editorRepository->findAll();
-        $jsonEditorList = $serializer->serialize($editorList, 'json');
+        $jsonEditorList = $serializer->serialize($editorList, 'json',['groups'=>'getEditors']);
         return new JsonResponse($jsonEditorList, Response::HTTP_OK, [],true);
     }
 
@@ -27,7 +27,7 @@ class EditorController extends AbstractController
     {
         $editor = $editorRepository->find($id);
         if ($editor) {
-            $jsonEditor = $serializer->serialize($editor, 'json');
+            $jsonEditor = $serializer->serialize($editor, 'json',['groups'=>'getEditors']);
             return new JsonResponse($jsonEditor,Response::HTTP_OK, [], true);
         }
         return new JsonResponse(['message'=>'editor not found'], Response::HTTP_NOT_FOUND);
