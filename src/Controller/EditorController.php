@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use function Symfony\Component\String\s;
 
 class EditorController extends AbstractController
 {
@@ -53,7 +52,12 @@ class EditorController extends AbstractController
         $editor = $repository->find($id);
         if ($editor) {
             $updateEditor = $serializer->deserialize($request->getContent(), Editor::class, "json");
+            $editor->setPhone($updateEditor->getPhone());
+            $editor->setAddress($updateEditor->getAddress());
+            $editor->setName($updateEditor->getName());
             $em->flush($updateEditor);
+
+            return new JsonResponse(["message"=>"editor updated", Response::HTTP_OK]);
         }
 
         return new JsonResponse(null, Response::HTTP_NOT_FOUND, [], true);

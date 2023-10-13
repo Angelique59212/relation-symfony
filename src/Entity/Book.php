@@ -13,23 +13,23 @@ class Book
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getBooks"])]
+    #[Groups(["getBooks", "getAuthors"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getBooks"])]
+    #[Groups(["getBooks", "getAuthors"])]
     private ?string $title = null;
 
     #[ORM\Column]
-    #[Groups(["getBooks"])]
+    #[Groups(["getBooks", "getAuthors"])]
     private ?int $years = null;
 
     #[ORM\Column]
-    #[Groups(["getBooks"])]
+    #[Groups(["getBooks", "getAuthors"])]
     private ?float $price = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(["getBooks"])]
+    #[Groups(["getBooks", "getAuthors"])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'books')]

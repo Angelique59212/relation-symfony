@@ -13,3 +13,22 @@ C
 src/Entity/Book.php,a/b/ab3eee75d94bf55f1a4d63fa10f72f9b39bd799f
 E
 src/Entity/Author.php,a/2/a25677f5de3140b3c09f61d8b1d3b5e2ba12ffd3
+H
+templates/base.html.twig,f/f/ffb3f1cfd73fdec1f0c80c63d0b5bbc1fff22022
+E
+src/Entity/Editor.php,4/7/4767e05d16c20f1037a8aad0d5e4482fcc6b0b9d
+S
+#src/Repository/AuthorRepository.php,d/c/dcfca0723be36baa10db97a57c0e116527173ead
+S
+#src/Repository/EditorRepository.php,d/5/d5521d3fa27f37b8384a941c80a03ca49c9039e3
+:
+
+.gitignore,a/5/a5cc2925ca8258af241be7e5b0381edf30266302
+S
+#src/Controller/EditorController.php,c/b/cb643de4ca2176c1923acc9f82f90397e76deec5
+Q
+!src/Controller/BookController.php,5/0/509f79d47706bc5593332f90b0f21a348fccbd90
+S
+#src/Controller/AuthorController.php,8/f/8fab16294134cb0c0f8c431ec5cc9e2c5ab7374e
+P
+ templates/author/index.html.twig,a/4/a4c056b2d6bde730c964dd7830a9140ee02d9362
