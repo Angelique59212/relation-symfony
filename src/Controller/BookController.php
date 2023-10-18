@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Entity\Author;
 use App\Entity\Editor;
+use App\Entity\Reader;
 use App\Repository\AuthorRepository;
 use App\Repository\BookRepository;
 use App\Repository\EditorRepository;
+use App\Repository\ReaderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,6 +26,7 @@ class BookController extends AbstractController
     {
         $books = $bookRepository->findAll();
         $jsonBooks = $serializer->serialize($books, 'json', ['groups' => 'getBooks']);
+
         return new JsonResponse($jsonBooks, Response::HTTP_OK, [], true);
     }
 
@@ -76,10 +79,69 @@ class BookController extends AbstractController
         $updateBook = $serializer->deserialize($request->getContent(),
             Book::class,
             'json',
-            [AbstractNormalizer::OBJECT_TO_POPULATE=>$currentBook]
+            [AbstractNormalizer::OBJECT_TO_POPULATE => $currentBook]
         );
         $em->persist($updateBook);
         $em->flush();
-        return new JsonResponse(["message"=> "Book update"], Response::HTTP_OK);
+        return new JsonResponse(["message" => "Book update"], Response::HTTP_OK);
     }
+
+    #[Route('/api/book/searchYear/{year}', name: 'app_book_searchYear', methods: ['GET'])]
+    public function searchYear(int $year, BookRepository $bookRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $books = $bookRepository->findAllGreaterThanYears($year);
+        $jsonBooks = $serializer->serialize($books, 'json', ['groups' => 'getBooks']);
+
+        return new JsonResponse($jsonBooks, Response::HTTP_OK, [], true);
+    }
+
+    #[Route('/api/book/searchLowerYear/{year}', name: 'app_book_searchLowerYear', methods: ['GET'])]
+    public function searchLowerYear(int $year, BookRepository $bookRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $books = $bookRepository->findAllLowerThanYear($year);
+        $jsonBooks = $serializer->serialize($books, 'json', ['groups' => 'getBooks']);
+
+        return new JsonResponse($jsonBooks, Response::HTTP_OK, [], true);
+    }
+
+    #[Route('/api/readerAdd/', name: 'app_add_reader', methods: ['PUT'])]
+    public function addReader(Request $request,ReaderRepository $repository,EntityManagerInterface$em,SerializerInterface $serializer, BookRepository $bookRepository): JsonResponse
+    {
+        $content = $request->toArray();
+        $bookId = $content['idBook'] ?? -1;
+        $readerId = $content['idReader'] ?? -1;
+        $book = $bookRepository->find($bookId);
+        $reader = $repository->find($readerId);
+
+        if ($book && $reader) {
+            $book->addReader($reader);
+            $em->persist($book);
+            $em->flush();
+            $jsonBook = $serializer->serialize($book, 'json', ['groups'=>'getBooks']);
+
+            return new JsonResponse($jsonBook, Response::HTTP_OK, [], true);
+        }
+        return new JsonResponse(['message'=>'book not found'], Response::HTTP_BAD_REQUEST);
+    }
+
+    #[Route('/api/readerDelete/', name: 'app_delete_reader', methods: ['PUT'])]
+    public function deleteReader(Request $request,ReaderRepository $repository,EntityManagerInterface$em,SerializerInterface $serializer, BookRepository $bookRepository): JsonResponse
+    {
+        $content = $request->toArray();
+        $bookId = $content['idBook'] ?? -1;
+        $readerId = $content['idReader'] ?? -1;
+        $book = $bookRepository->find($bookId);
+        $reader = $repository->find($readerId);
+
+        if ($book && $reader) {
+            $book->removeReader($reader);
+            $em->persist($book);
+            $em->flush();
+            $jsonBook = $serializer->serialize($book, 'json', ['groups'=>'getBooks']);
+
+            return new JsonResponse($jsonBook, Response::HTTP_OK, [], true);
+        }
+        return new JsonResponse(['message'=>'book not found'], Response::HTTP_BAD_REQUEST);
+    }
+
 }

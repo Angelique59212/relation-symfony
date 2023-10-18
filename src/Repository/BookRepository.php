@@ -21,6 +21,32 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
+    public function findAllGreaterThanYears(int $year): array
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT b
+                FROM App\Entity\Book b
+                WHERE b.years > :year
+                ORDER BY b.years'
+        )->setParameter('year', $year);
+
+        return $query->getResult();
+    }
+
+    public function findAllLowerThanYear(int $year): array
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.years < :years')
+            ->setParameter("years", $year)
+            ->orderBy('b.years', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+
 //    /**
 //     * @return Book[] Returns an array of Book objects
 //     */

@@ -32,3 +32,11 @@ S
 #src/Controller/AuthorController.php,8/f/8fab16294134cb0c0f8c431ec5cc9e2c5ab7374e
 P
  templates/author/index.html.twig,a/4/a4c056b2d6bde730c964dd7830a9140ee02d9362
+P
+ config/packages/nelmio_cors.yaml,c/7/c7cee19ef8bd16fdb92a74b9724402fea6a849d2
+E
+src/Entity/Reader.php,c/8/c83c353a14c3ad90f67133edd050ce57f1aff989
+S
+#src/Repository/ReaderRepository.php,3/0/30bb828c67eea48f88c9e135b49414a1d1c4512f
+S
+#src/Controller/ReaderController.php,3/f/3f88b4de4278766f48870d0cd5db0ea1c033323f
